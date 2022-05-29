@@ -272,6 +272,10 @@ func (g *Github) CreatePullRequest(ctx context.Context, repo scm.Repository, prR
 		return nil, err
 	}
 
+	if err := g.addLabels(ctx, r, newPR, pr); err != nil {
+		return nil, err
+	}
+
 	if err := g.addReviewers(ctx, r, newPR, pr); err != nil {
 		return nil, err
 	}
@@ -297,6 +301,15 @@ func (g *Github) createPullRequest(ctx context.Context, repo repository, prRepo 
 	}
 
 	return pr, nil
+}
+
+func (g *Github) addLabels(ctx context.Context, repo repository, newPR scm.NewPullRequest, createdPR *github.PullRequest) error {
+	if len(newPR.Labels) == 0 {
+		return nil
+	}
+
+	_, _, err := g.ghClient.Issues.AddLabelsToIssue(ctx, repo.ownerName, repo.name, createdPR.GetNumber(), newPR.Labels)
+	return err
 }
 
 func (g *Github) addReviewers(ctx context.Context, repo repository, newPR scm.NewPullRequest, createdPR *github.PullRequest) error {

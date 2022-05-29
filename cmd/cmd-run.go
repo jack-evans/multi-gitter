@@ -39,6 +39,7 @@ func RunCmd() *cobra.Command {
 	cmd.Flags().StringP("commit-message", "m", "", "The commit message. Will default to title + body if none is set.")
 	cmd.Flags().StringSliceP("reviewers", "r", nil, "The username of the reviewers to be added on the pull request.")
 	cmd.Flags().StringSliceP("assignees", "a", nil, "The username of the assignees to be added on the pull request.")
+	cmd.Flags().StringSliceP("labels", "l", nil, "The labels to assign on the PR. This is only available for Github and Gitlab.")
 	cmd.Flags().IntP("max-reviewers", "M", 0, "If this value is set, reviewers will be randomized.")
 	cmd.Flags().IntP("concurrent", "C", 1, "The maximum number of concurrent runs.")
 	cmd.Flags().BoolP("skip-pr", "", false, "Skip pull request and directly push to the branch.")
@@ -73,6 +74,7 @@ func run(cmd *cobra.Command, args []string) error {
 	baseBranchName, _ := flag.GetString("base-branch")
 	prTitle, _ := flag.GetString("pr-title")
 	prBody, _ := flag.GetString("pr-body")
+	labels, _ := flag.GetStringSlice("labels")
 	commitMessage, _ := flag.GetString("commit-message")
 	reviewers, _ := flag.GetStringSlice("reviewers")
 	maxReviewers, _ := flag.GetInt("max-reviewers")
@@ -190,6 +192,7 @@ func run(cmd *cobra.Command, args []string) error {
 		CommitAuthor:     commitAuthor,
 		BaseBranch:       baseBranchName,
 		Assignees:        assignees,
+		Labels:           labels,
 		ConflictStrategy: conflictStrategy,
 		Draft:            draft,
 

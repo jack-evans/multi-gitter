@@ -52,6 +52,7 @@ type Runner struct {
 	CommitAuthor     *git.CommitAuthor
 	BaseBranch       string // The base branch of the PR, use default branch if not set
 	Assignees        []string
+	Labels           []string
 
 	Concurrent      int
 	SkipPullRequest bool     // If set, the script will run directly on the base-branch without creating any PR
@@ -326,6 +327,7 @@ func (r *Runner) runSingleRepo(ctx context.Context, repo scm.Repository) (scm.Pu
 		pr, err = r.VersionController.CreatePullRequest(ctx, repo, prRepo, scm.NewPullRequest{
 			Title:     r.PullRequestTitle,
 			Body:      r.PullRequestBody,
+			Labels:    r.Labels,
 			Head:      r.FeatureBranch,
 			Base:      baseBranch,
 			Reviewers: getReviewers(r.Reviewers, r.MaxReviewers),
