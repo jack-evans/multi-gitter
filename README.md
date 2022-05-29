@@ -170,6 +170,10 @@ log-format: text
 # The level of logging that should be made. Available values: trace, debug, info, error.
 log-level: info
 
+# What labels to assign on the Pull Request
+labels:
+  - example
+
 # If this value is set, reviewers will be randomized.
 max-reviewers: 0
 
